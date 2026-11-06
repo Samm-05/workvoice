@@ -167,3 +167,4 @@ src/
 | `Status Success` | `#1F9D55` on `#E8F6EE` | Operational / Passed / Approved |
 | `Status Warning` | `#B7791F` on `#FDF3DC` | Needs Review / Maintenance Req |
 | `Status Danger` | `#D64545` on `#FDECEC` | Critical Fault / Fail |
+

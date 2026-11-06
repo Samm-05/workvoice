@@ -103,3 +103,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.status.danger.text,
   },
 });
+
