@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "WorkVoice",
+    "slug": "workvoice",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.workvoice.industrial",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "RECORD_AUDIO",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-image",
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow WorkVoice to access camera for industrial defect evidence capture."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow WorkVoice to record voice inspections and checklist status notes."
+        }
+      ]
+    ]
+  }
+}

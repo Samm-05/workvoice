@@ -1,0 +1,301 @@
+import { Asset, ChecklistItem, Defect, InspectionPhoto, ClarificationQuestion, InspectionReport, CorrectiveAction, User } from '../types';
+
+export const mockUsers: Record<string, User> = {
+  technician: {
+    id: 'tech-sam',
+    name: 'Sam Miller',
+    email: 'sam.miller@workvoice.internal',
+    role: 'technician',
+    avatarInitials: 'SM',
+    title: 'Senior Reliability Technician',
+    line: 'Line 2 - Assembly',
+  },
+  supervisor: {
+    id: 'sup-sarah',
+    name: 'Sarah Jenkins',
+    email: 'sarah.jenkins@workvoice.internal',
+    role: 'supervisor',
+    avatarInitials: 'SJ',
+    title: 'Plant Operations Supervisor',
+    line: 'All Lines (Stamping & Assembly)',
+  },
+};
+
+export const mockAssets: Asset[] = [
+  {
+    id: 'conveyor-c12',
+    name: 'Conveyor C-12',
+    line: 'Line 2',
+    location: 'Stamping & Assembly Bay 4',
+    status: 'warning',
+    statusLabel: 'Maintenance Req',
+    imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+    lastInspected: '2 days ago',
+    pendingDefectsCount: 3,
+    description: 'Heavy-duty steel roller conveyor belt transporting chassis components between stamping and robotic welding.',
+    speedRating: '1.4 m/s',
+    operatingHours: 4210,
+  },
+  {
+    id: 'welder-r04',
+    name: 'Robotic Welder R-04',
+    line: 'Line 2',
+    location: 'Cell 6 Welding Station',
+    status: 'success',
+    statusLabel: 'Operational',
+    imageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
+    lastInspected: 'Yesterday',
+    pendingDefectsCount: 0,
+    description: '6-axis spot welding robot with integrated water cooling circuit and auto tip dresser.',
+    speedRating: '42 cycles/hr',
+    operatingHours: 1980,
+  },
+  {
+    id: 'press-hp01',
+    name: 'Hydraulic Press HP-01',
+    line: 'Line 1',
+    location: 'Heavy Press Section A',
+    status: 'danger',
+    statusLabel: 'Critical Alert',
+    imageUrl: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
+    lastInspected: '4 hours ago',
+    pendingDefectsCount: 2,
+    description: '800-ton hydraulic stamping press. Piston cylinder seal degradation flagged.',
+    speedRating: '18 strokes/min',
+    operatingHours: 6420,
+  },
+  {
+    id: 'filter-pb03',
+    name: 'Paint Filter PB-03',
+    line: 'Line 3',
+    location: 'Paint Finishing Bay',
+    status: 'neutral',
+    statusLabel: 'Inspection Due',
+    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+    lastInspected: '6 days ago',
+    pendingDefectsCount: 1,
+    description: 'HEPA exhaust filtration matrix and differential pressure sensor.',
+    speedRating: '480 CFM',
+    operatingHours: 3100,
+  },
+];
+
+export const mockChecklistC12: ChecklistItem[] = [
+  {
+    id: 'chk-c12-1',
+    code: 'CHK-01',
+    label: 'Primary belt alignment and tracking tension',
+    category: 'Belt & Rollers',
+    status: 'fail',
+    note: 'Belt drifts 18mm toward south guard rail at drive head.',
+  },
+  {
+    id: 'chk-c12-2',
+    code: 'CHK-02',
+    label: 'Drive pulley #2 lag rubber wear & adhesion',
+    category: 'Drive & Motor',
+    status: 'fail',
+    note: 'Severe surface grooving and rubber peeling observed on drive pulley.',
+  },
+  {
+    id: 'chk-c12-3',
+    code: 'CHK-03',
+    label: 'Motor vibration & bearing operating temperature',
+    category: 'Drive & Motor',
+    status: 'needs_review',
+    note: 'Slight high-frequency whine audible under 80% payload.',
+  },
+  {
+    id: 'chk-c12-4',
+    code: 'CHK-04',
+    label: 'Emergency pull-cord trip switches (East & West)',
+    category: 'Safety & Guards',
+    status: 'pass',
+    note: 'Tested pull cord; instantaneous motor cut-off verified.',
+  },
+  {
+    id: 'chk-c12-5',
+    code: 'CHK-05',
+    label: 'Optical jam sensors & photo-eyes calibration',
+    category: 'Sensors & Electrical',
+    status: 'pass',
+    note: 'Sensors wiped clean; signal response within 99.4% standard.',
+  },
+  {
+    id: 'chk-c12-6',
+    code: 'CHK-06',
+    label: 'Return idler bearings lubrication & clearance',
+    category: 'Belt & Rollers',
+    status: 'pass',
+    note: 'Greased to manufacturer spec (Mobil Polyrex EM).',
+  },
+];
+
+export const mockInitialTranscriptC12 = 
+  "I'm at Conveyor C-12 on Line 2 stamping line. The main drive pulley on motor head 2 is showing noticeable slippage when carrying stamped sheet metal pallets. The rubber lagging is worn down significantly with about 3 millimeters of grooving on the left side. The belt is also tracking slightly off-center towards the south guide rail, roughly 15 to 18 millimeters offset. Tensioner carriage seems tight, but return idler 4 has metal dust buildup. We need to replace the pulley lagging and re-align before third shift starts.";
+
+export const mockObservationsC12: Defect[] = [
+  {
+    id: 'obs-c12-1',
+    component: 'Drive Pulley 2 Lagging',
+    description: 'Severe lag rubber wear and 3mm grooving causing slippage under pallet load.',
+    severity: 'danger',
+    confidence: 0.98,
+    technicianConfirmed: true,
+    supervisorVerified: true,
+    category: 'Drive & Motor',
+    photoUri: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'obs-c12-2',
+    component: 'Belt Tracking Alignment',
+    description: 'Belt drifted 15-18mm south toward guide rail; risk of edge fraying against bracket.',
+    severity: 'warning',
+    confidence: 0.94,
+    technicianConfirmed: true,
+    supervisorVerified: false,
+    category: 'Belt & Rollers',
+    photoUri: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 'obs-c12-3',
+    component: 'Return Idler #4 Bearings',
+    description: 'Ferrous metal dust accumulation noted near bearing seal, indicates possible roller seizure.',
+    severity: 'warning',
+    confidence: 0.89,
+    technicianConfirmed: false,
+    supervisorVerified: false,
+    category: 'Belt & Rollers',
+    photoUri: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
+  },
+];
+
+export const mockPhotosC12: InspectionPhoto[] = [
+  {
+    id: 'photo-1',
+    uri: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+    timestamp: 'Today, 10:14 AM',
+    label: 'Drive pulley 2 worn grooving',
+    flagged: true,
+  },
+  {
+    id: 'photo-2',
+    uri: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
+    timestamp: 'Today, 10:16 AM',
+    label: '18mm south belt drift at guide bracket',
+    flagged: false,
+  },
+  {
+    id: 'photo-3',
+    uri: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
+    timestamp: 'Today, 10:18 AM',
+    label: 'Return idler 4 metal dust trace',
+    flagged: false,
+  },
+];
+
+export const mockClarificationsC12: ClarificationQuestion[] = [
+  {
+    id: 'cq-1',
+    question: 'Did you notice abnormal motor temperature or overheating smell near Drive 2?',
+    options: ['Yes (>75°C)', 'Normal (<60°C)', 'Not checked'],
+    selectedAnswer: 'Yes (>75°C)',
+    answeredAt: '10:20 AM',
+  },
+  {
+    id: 'cq-2',
+    question: 'Is Conveyor C-12 safe to run at reduced speed until scheduled downtime?',
+    options: ['Run at 50% capacity', 'Immediate lockout required', 'Safe for 2 hours'],
+    selectedAnswer: 'Immediate lockout required',
+    answeredAt: '10:21 AM',
+  },
+];
+
+export const mockMissingFieldsC12: string[] = [
+  'Drive motor surface infrared thermal reading (°C)',
+  'Replacement pulley lagging stock serial number',
+];
+
+export const mockReportC12: InspectionReport = {
+  id: 'insp-c12-001',
+  assetId: 'conveyor-c12',
+  assetName: 'Conveyor C-12',
+  line: 'Line 2 - Stamping & Assembly',
+  technicianId: 'tech-sam',
+  technicianName: 'Sam Miller',
+  supervisorId: 'sup-sarah',
+  supervisorName: 'Sarah Jenkins',
+  status: 'submitted',
+  createdAt: 'Today, 10:25 AM',
+  updatedAt: 'Today, 10:28 AM',
+  recordingDurationSeconds: 42,
+  transcript: mockInitialTranscriptC12,
+  originalTranscript: mockInitialTranscriptC12,
+  observations: mockObservationsC12,
+  checklist: mockChecklistC12,
+  photos: mockPhotosC12,
+  clarificationQuestions: mockClarificationsC12,
+  missingFields: mockMissingFieldsC12,
+  supervisorNotes: 'Critical for shift turnover. Must verify lagging inventory before shift 2 maintenance window.',
+};
+
+export const mockCorrectiveActions: CorrectiveAction[] = [
+  {
+    id: 'act-c12-01',
+    inspectionId: 'insp-c12-001',
+    assetId: 'conveyor-c12',
+    assetName: 'Conveyor C-12',
+    title: 'Replace Drive Pulley Lagging & Realign Belt',
+    description: 'Lockout tagout Conveyor C-12. Strip damaged rubber lagging from drive head 2 pulley, install vulcanized ceramic lag replacement kit, and realign tension carriage within 2mm tolerance.',
+    assignedToTechnician: 'Sam Miller',
+    priority: 'critical',
+    dueDate: 'Tomorrow, 07:00 AM',
+    status: 'assigned',
+    createdAt: 'Today, 10:35 AM',
+    history: [
+      {
+        id: 'h-1',
+        status: 'open',
+        timestamp: 'Today, 10:30 AM',
+        note: 'Action created automatically from C-12 inspection submission.',
+        author: 'WorkVoice AI Engine',
+      },
+      {
+        id: 'h-2',
+        status: 'assigned',
+        timestamp: 'Today, 10:35 AM',
+        note: 'Assigned to Shift A lead technician Sam Miller with critical priority.',
+        author: 'Sarah Jenkins (Supervisor)',
+      },
+    ],
+  },
+  {
+    id: 'act-hp-02',
+    inspectionId: 'insp-hp-002',
+    assetId: 'press-hp01',
+    assetName: 'Hydraulic Press HP-01',
+    title: 'Replace Piston Seal Matrix #3',
+    description: 'Inspect hydraulic manifold pressure drop and install replacement seal kit.',
+    assignedToTechnician: 'Dave Kovacs',
+    priority: 'high',
+    dueDate: 'Nov 8, 2026',
+    status: 'in_progress',
+    createdAt: 'Yesterday, 14:10 PM',
+    history: [
+      {
+        id: 'h-hp-1',
+        status: 'open',
+        timestamp: 'Yesterday, 14:10 PM',
+        note: 'Seal pressure drop flagged during routine check.',
+        author: 'Sarah Jenkins',
+      },
+      {
+        id: 'h-hp-2',
+        status: 'in_progress',
+        timestamp: 'Today, 08:00 AM',
+        note: 'Parts pulled from central depot, work underway.',
+        author: 'Dave Kovacs',
+      },
+    ],
+  },
+];
