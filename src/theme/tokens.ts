@@ -1,44 +1,76 @@
 export const colors = {
-  background: '#FFFFFF',
+  // Global Design System Colors
+  background: '#F7F8FA',
   surface: '#FFFFFF',
-  surfaceMuted: '#F4F4F5',
-  border: '#E5E5E7',
-  textPrimary: '#0B0B0C',
-  textSecondary: '#6B6B70',
-  textTertiary: '#9A9AA0',
-  primary: '#000000',
+  surfaceMuted: '#F3F4F6',
+  border: '#E5E7EB',
+  divider: '#E5E7EB',
+  text: '#111827',
+  textPrimary: '#111827',
+  textSecondary: '#6B7280',
+  textTertiary: '#9CA3AF',
+  muted: '#6B7280',
+  primary: '#2563EB',
   onPrimary: '#FFFFFF',
+  primaryMuted: '#DBEAFE',
+
+  // Hero / accent
   accentHero: '#F5A623',
   accentBlue: {
-    bg: '#CFE3FF',
-    text: '#2F6FED',
+    bg: '#DBEAFE',
+    text: '#1D4ED8',
   },
-  overlayScrim: 'rgba(0,0,0,0.55)',
-  imageGradient: ['transparent', 'rgba(0,0,0,0.6)'] as const,
-  heartRed: '#FF4D5E',
-  disabled: '#C9C9CC',
+  overlayScrim: 'rgba(0,0,0,0.5)',
+  imageGradient: ['transparent', 'rgba(0,0,0,0.7)'] as const,
+  heartRed: '#EF4444',
+  disabled: '#E5E7EB',
+  disabledText: '#9CA3AF',
 
-  // Status colors
+  // Status colors (soft tinted background + darker text)
   status: {
+    draft: {
+      text: '#4B5563',
+      bg: '#F3F4F6',
+    },
+    submitted: {
+      text: '#B45309',
+      bg: '#FEF3C7',
+    },
+    approved: {
+      text: '#047857',
+      bg: '#D1FAE5',
+    },
+    rejected: {
+      text: '#B91C1C',
+      bg: '#FEE2E2',
+    },
+    operational: {
+      text: '#047857',
+      bg: '#D1FAE5',
+    },
+    maintenance_req: {
+      text: '#B45309',
+      bg: '#FEF3C7',
+    },
     success: {
-      text: '#1F9D55',
-      bg: '#E8F6EE',
+      text: '#047857',
+      bg: '#D1FAE5',
     },
     warning: {
-      text: '#B7791F',
-      bg: '#FDF3DC',
+      text: '#B45309',
+      bg: '#FEF3C7',
     },
     danger: {
-      text: '#D64545',
-      bg: '#FDECEC',
+      text: '#B91C1C',
+      bg: '#FEE2E2',
     },
     info: {
-      text: '#2F6FED',
-      bg: '#EAF1FE',
+      text: '#1D4ED8',
+      bg: '#DBEAFE',
     },
     neutral: {
-      text: '#6B6B70',
-      bg: '#F4F4F5',
+      text: '#4B5563',
+      bg: '#F3F4F6',
     },
   },
 } as const;
@@ -46,66 +78,96 @@ export const colors = {
 export type StatusType = keyof typeof colors.status;
 
 export const typography = {
-  display: {
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: '700' as const,
-    letterSpacing: -0.3,
-    color: colors.textPrimary,
+  // Global Design System Typography
+  screenTitle: {
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '600' as const,
+    color: colors.text,
   },
-  title: {
-    fontSize: 24,
-    lineHeight: 30,
-    fontWeight: '700' as const,
-    color: colors.textPrimary,
-  },
-  h2: {
-    fontSize: 17,
+  sectionTitle: {
+    fontSize: 16,
     lineHeight: 24,
     fontWeight: '600' as const,
-    color: colors.textPrimary,
+    color: colors.text,
   },
-  sectionHdr: {
-    fontSize: 15,
-    lineHeight: 20,
+  cardTitle: {
+    fontSize: 16,
+    lineHeight: 22,
     fontWeight: '600' as const,
-    color: colors.textPrimary,
+    color: colors.text,
   },
   body: {
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '400' as const,
-    color: colors.textPrimary,
+    color: colors.text,
   },
   bodyStrong: {
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '600' as const,
-    color: colors.textPrimary,
+    color: colors.text,
+  },
+  caption: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '400' as const,
+    color: colors.muted,
+  },
+  captionStrong: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '500' as const,
+    color: colors.muted,
   },
   label: {
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '500' as const,
-    color: colors.textPrimary,
+    color: colors.text,
   },
   labelBold: {
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '600' as const,
-    color: colors.textPrimary,
+    color: colors.text,
   },
   meta: {
     fontSize: 12,
     lineHeight: 16,
     fontWeight: '400' as const,
-    color: colors.textSecondary,
+    color: colors.muted,
   },
-  caption: {
+  tabLabel: {
     fontSize: 11,
     lineHeight: 14,
     fontWeight: '500' as const,
-    color: colors.textSecondary,
+  },
+  display: {
+    fontSize: 26,
+    lineHeight: 32,
+    fontWeight: '700' as const,
+    letterSpacing: -0.3,
+    color: colors.text,
+  },
+  title: {
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '600' as const,
+    color: colors.text,
+  },
+  h2: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '600' as const,
+    color: colors.text,
+  },
+  sectionHdr: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '600' as const,
+    color: colors.text,
   },
 } as const;
 
@@ -118,21 +180,34 @@ export const spacing = {
   xl: 24,
   xxl: 32,
   screenPadding: 16,
-  sectionGap: 24,
+  cardPadding: 16,
   cardGap: 12,
+  sectionGap: 24,
 } as const;
 
 export const radii = {
-  pill: 999,
+  card: 16,
   imageCard: 16,
-  bottomSheet: 24,
-  smallThumb: 8,
-  avatar: 999,
-  modal: 20,
+  pill: 999,
+  button: 12,
   input: 12,
+  smallThumb: 8,
+  bottomSheet: 24,
+  modal: 16,
+  avatar: 999,
 } as const;
 
 export const elevation = {
+  card: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
+  },
   flat: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -140,12 +215,19 @@ export const elevation = {
   },
   sheet: {
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 12,
   },
-  ripple: 'rgba(0,0,0,0.08)',
+  fab: {
+    elevation: 4,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.16,
+    shadowRadius: 6,
+  },
+  ripple: 'rgba(37, 99, 235, 0.08)',
 } as const;
 
 export const tokens = {
@@ -157,4 +239,3 @@ export const tokens = {
 } as const;
 
 export default tokens;
-
