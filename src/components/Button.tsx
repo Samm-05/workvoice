@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   ViewStyle,
   TextStyle,
-  Platform,
 } from 'react-native';
 import { colors, radii, typography, elevation } from '../theme/tokens';
 
@@ -33,13 +32,15 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
-      android_ripple={{ color: elevation.ripple }}
+      android_ripple={{ color: 'rgba(255,255,255,0.2)' }}
       style={({ pressed }) => [
         styles.primaryButton,
         disabled && styles.primaryDisabled,
         pressed && !disabled && styles.pressed,
         style,
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={label}
     >
       {loading ? (
         <ActivityIndicator color={colors.onPrimary} size="small" />
@@ -81,6 +82,8 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
         pressed && !disabled && styles.pressed,
         style,
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={label}
     >
       {loading ? (
         <ActivityIndicator color={colors.textPrimary} size="small" />
@@ -122,6 +125,8 @@ export const OutlinedButton: React.FC<ButtonProps> = ({
         pressed && !disabled && styles.pressed,
         style,
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={label}
     >
       {loading ? (
         <ActivityIndicator color={colors.textPrimary} size="small" />
@@ -149,6 +154,7 @@ interface IconButtonProps {
   disabled?: boolean;
   size?: number;
   bg?: string;
+  accessibilityLabel?: string;
   style?: ViewStyle;
 }
 
@@ -156,14 +162,16 @@ export const IconButton: React.FC<IconButtonProps> = ({
   icon,
   onPress,
   disabled = false,
-  size = 40,
+  size = 44,
   bg = colors.surfaceMuted,
+  accessibilityLabel = 'Button',
   style,
 }) => {
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      hitSlop={4}
       android_ripple={{ color: elevation.ripple, borderless: true, radius: size / 2 }}
       style={({ pressed }) => [
         styles.iconButton,
@@ -176,6 +184,8 @@ export const IconButton: React.FC<IconButtonProps> = ({
         pressed && !disabled && styles.pressed,
         style,
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
     >
       {icon}
     </Pressable>
@@ -184,14 +194,15 @@ export const IconButton: React.FC<IconButtonProps> = ({
 
 const styles = StyleSheet.create({
   primaryButton: {
-    height: 52,
+    height: 48,
     width: '100%',
-    borderRadius: radii.pill,
+    borderRadius: radii.button,
     backgroundColor: colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    minHeight: 44,
   },
   primaryDisabled: {
     backgroundColor: colors.disabled,
@@ -201,14 +212,17 @@ const styles = StyleSheet.create({
     color: colors.onPrimary,
   },
   secondaryButton: {
-    height: 52,
+    height: 48,
     width: '100%',
-    borderRadius: radii.pill,
+    borderRadius: radii.button,
     backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.border,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    minHeight: 44,
   },
   secondaryDisabled: {
     opacity: 0.5,
@@ -218,16 +232,17 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   outlinedButton: {
-    height: 52,
+    height: 48,
     width: '100%',
-    borderRadius: radii.pill,
+    borderRadius: radii.button,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    minHeight: 44,
   },
   outlinedText: {
     ...typography.labelBold,
@@ -236,9 +251,10 @@ const styles = StyleSheet.create({
   iconButton: {
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: 44,
+    minHeight: 44,
   },
   pressed: {
     opacity: 0.85,
   },
 });
-

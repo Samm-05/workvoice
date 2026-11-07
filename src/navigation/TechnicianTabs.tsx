@@ -1,27 +1,37 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Home,
   ClipboardList,
-  FileText,
+  FileCheck2,
   Cpu,
   User as UserIcon,
 } from 'lucide-react-native';
 import { colors, typography } from '../theme/tokens';
 import { TechnicianHomeScreen } from '../screens/technician/TechnicianHomeScreen';
 import { InspectionsTabScreen } from '../screens/shared/InspectionsTabScreen';
+import { ReportsTabScreen } from '../screens/shared/ReportsTabScreen';
 import { AssetsTabScreen } from '../screens/shared/AssetsTabScreen';
 import { ProfileTabScreen } from '../screens/shared/ProfileTabScreen';
 
 const Tab = createBottomTabNavigator();
 
 export const TechnicianTabs: React.FC = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            height: 64 + insets.bottom,
+            paddingBottom: insets.bottom > 0 ? insets.bottom : 8,
+          },
+        ],
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: styles.tabBarLabel,
@@ -36,41 +46,39 @@ export const TechnicianTabs: React.FC = () => {
             <Home
               size={22}
               color={color}
-              strokeWidth={focused ? 2.5 : 1.75}
+              strokeWidth={focused ? 2.2 : 1.75}
             />
           ),
         }}
       />
       <Tab.Screen
         name="InspectionsTab"
+        component={InspectionsTabScreen}
         options={{
           tabBarLabel: 'Inspections',
           tabBarIcon: ({ color, focused }) => (
             <ClipboardList
               size={22}
               color={color}
-              strokeWidth={focused ? 2.5 : 1.75}
+              strokeWidth={focused ? 2.2 : 1.75}
             />
           ),
         }}
-      >
-        {() => <InspectionsTabScreen title="Technician Inspections" />}
-      </Tab.Screen>
+      />
       <Tab.Screen
         name="ReportsTab"
+        component={ReportsTabScreen}
         options={{
           tabBarLabel: 'Reports',
           tabBarIcon: ({ color, focused }) => (
-            <FileText
+            <FileCheck2
               size={22}
               color={color}
-              strokeWidth={focused ? 2.5 : 1.75}
+              strokeWidth={focused ? 2.2 : 1.75}
             />
           ),
         }}
-      >
-        {() => <InspectionsTabScreen title="Submitted Reports" />}
-      </Tab.Screen>
+      />
       <Tab.Screen
         name="AssetsTab"
         component={AssetsTabScreen}
@@ -80,7 +88,7 @@ export const TechnicianTabs: React.FC = () => {
             <Cpu
               size={22}
               color={color}
-              strokeWidth={focused ? 2.5 : 1.75}
+              strokeWidth={focused ? 2.2 : 1.75}
             />
           ),
         }}
@@ -94,7 +102,7 @@ export const TechnicianTabs: React.FC = () => {
             <UserIcon
               size={22}
               color={color}
-              strokeWidth={focused ? 2.5 : 1.75}
+              strokeWidth={focused ? 2.2 : 1.75}
             />
           ),
         }}
@@ -105,17 +113,20 @@ export const TechnicianTabs: React.FC = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 64,
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    elevation: 0,
-    paddingBottom: 8,
+    elevation: 2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
     paddingTop: 6,
   },
   tabBarLabel: {
-    ...typography.caption,
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: '500',
     marginTop: 2,
   },
 });
-

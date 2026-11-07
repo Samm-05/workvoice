@@ -19,14 +19,18 @@ import {
   LogOut,
   RefreshCw,
   Sparkles,
+  ChevronRight,
+  Settings,
+  Mic,
+  Sliders,
 } from 'lucide-react-native';
-import { colors, radii, typography, spacing } from '../../theme/tokens';
+import { colors, radii, typography, spacing, elevation } from '../../theme/tokens';
 import {
-  HeaderBar,
+  AppHeader,
   Avatar,
+  StatusPill,
   PrimaryButton,
   SecondaryButton,
-  StatusChip,
 } from '../../components';
 import { useAuthStore } from '../../store/authStore';
 import { useInspectionStore } from '../../store/inspectionStore';
@@ -57,7 +61,7 @@ export const ProfileTabScreen: React.FC = () => {
   const handleToggleRole = () => {
     const nextRole = role === 'technician' ? 'supervisor' : 'technician';
     switchRole(nextRole);
-    showToast(`Switched active journey to ${nextRole.toUpperCase()}`);
+    showToast(`Switched active role to ${nextRole.toUpperCase()}`);
   };
 
   const handleSignOut = () => {
@@ -68,101 +72,138 @@ export const ProfileTabScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <HeaderBar title="Profile & Settings" />
+
+      {/* AppHeader: fixed 56px below status bar, left title */}
+      <AppHeader
+        title="Profile"
+        subtitle="Account settings & device configuration"
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* User Card */}
+        {/* User Info Card */}
         <View style={styles.userCard}>
-          <Avatar initials={user?.avatarInitials || 'SM'} size={54} />
-          <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user?.name || 'Sam Miller'}</Text>
-            <Text style={styles.userTitle}>{user?.title || 'Lead Technician'}</Text>
-            <Text style={styles.userLine}>{user?.line || 'Line 2 - Assembly'}</Text>
+          <Avatar initials={user?.avatarInitials || 'SM'} size={56} />
+          <View style={styles.userInfoCol}>
+            <View style={styles.nameRow}>
+              <Text style={styles.userName} numberOfLines={1}>
+                {user?.name || 'Sam Miller'}
+              </Text>
+              <StatusPill
+                status={role === 'supervisor' ? 'info' : 'success'}
+                label={role.toUpperCase()}
+              />
+            </View>
+            <Text style={styles.userTitle} numberOfLines={1}>
+              {user?.title || 'Senior Reliability Technician'}
+            </Text>
+            <Text style={styles.userLine} numberOfLines={1}>
+              {user?.email || 'sam.miller@workvoice.internal'}
+            </Text>
           </View>
-          <StatusChip
-            status={role === 'supervisor' ? 'info' : 'success'}
-            label={role.toUpperCase()}
-          />
         </View>
 
-        {/* Quick Role Switcher Banner */}
-        <View style={styles.roleSwitchCard}>
-          <View style={styles.roleSwitchLeft}>
-            <Sparkles size={18} color={colors.primary} />
-            <View>
-              <Text style={styles.roleSwitchTitle}>
-                {role === 'technician' ? 'Switch to Supervisor Flow' : 'Switch to Technician Flow'}
+        {/* Role Switcher Banner */}
+        <View style={styles.roleCard}>
+          <View style={styles.roleHeaderRow}>
+            <View style={styles.roleIconWrap}>
+              <Sparkles size={18} color={colors.primary} />
+            </View>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Text style={styles.roleCardTitle}>
+                Active Role: {role === 'technician' ? 'Technician' : 'Supervisor'}
               </Text>
-              <Text style={styles.roleSwitchDesc}>
+              <Text style={styles.roleCardSubtitle}>
                 {role === 'technician'
-                  ? 'Access approval queues and corrective actions'
-                  : 'Record inspections and capture field evidence'}
+                  ? 'Switch to Supervisor mode to approve reports and assign corrective actions.'
+                  : 'Switch to Technician mode to record voice inspections and checklist data.'}
               </Text>
             </View>
           </View>
-          <PrimaryButton
-            label={`Switch to ${role === 'technician' ? 'Supervisor' : 'Technician'}`}
+
+          <Pressable
             onPress={handleToggleRole}
-            style={{ marginTop: 12 }}
-          />
+            hitSlop={6}
+            android_ripple={{ color: elevation.ripple }}
+            style={styles.switchRoleButton}
+            accessibilityRole="button"
+            accessibilityLabel="Switch active role"
+          >
+            <Text style={styles.switchRoleBtnText}>
+              Switch to {role === 'technician' ? 'Supervisor Mode' : 'Technician Mode'}
+            </Text>
+            <ChevronRight size={16} color={colors.primary} />
+          </Pressable>
         </View>
 
-        {/* App Settings Section */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Field Operations Settings</Text>
-
-          <View style={styles.settingRow}>
-            <View style={styles.settingTextCol}>
-              <Text style={styles.settingLabel}>Simulate Offline Mode</Text>
-              <Text style={styles.settingMeta}>Queue inspections locally in storage</Text>
+        {/* Section: Settings (Grouped List) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Field Operations Settings</Text>
+          <View style={styles.settingsGroup}>
+            {/* Setting 1: Offline Mode */}
+            <View style={styles.settingItem}>
+              <View style={styles.settingTextCol}>
+                <Text style={styles.settingTitle}>Simulate Offline Mode</Text>
+                <Text style={styles.settingDescription}>
+                  Queue voice notes and reports locally without cellular connection
+                </Text>
+              </View>
+              <Switch
+                value={offlineMode}
+                onValueChange={handleToggleOffline}
+                thumbColor={offlineMode ? colors.primary : '#FFFFFF'}
+                trackColor={{ false: colors.border, true: colors.primaryMuted }}
+              />
             </View>
-            <Switch
-              value={offlineMode}
-              onValueChange={handleToggleOffline}
-              thumbColor={offlineMode ? colors.primary : colors.surfaceMuted}
-              trackColor={{ false: colors.border, true: '#9A9AA0' }}
-            />
-          </View>
 
-          <View style={styles.settingRow}>
-            <View style={styles.settingTextCol}>
-              <Text style={styles.settingLabel}>Simulate Network Latency</Text>
-              <Text style={styles.settingMeta}>Realistic STT speech-to-text delay</Text>
+            <View style={styles.settingDivider} />
+
+            {/* Setting 2: STT Speech Latency */}
+            <View style={styles.settingItem}>
+              <View style={styles.settingTextCol}>
+                <Text style={styles.settingTitle}>Speech-to-Text Latency Simulation</Text>
+                <Text style={styles.settingDescription}>
+                  Simulate realistic 1.4s AI speech processing in field conditions
+                </Text>
+              </View>
+              <Switch
+                value={latencySim}
+                onValueChange={handleToggleLatency}
+                thumbColor={latencySim ? colors.primary : '#FFFFFF'}
+                trackColor={{ false: colors.border, true: colors.primaryMuted }}
+              />
             </View>
-            <Switch
-              value={latencySim}
-              onValueChange={handleToggleLatency}
-              thumbColor={latencySim ? colors.primary : colors.surfaceMuted}
-              trackColor={{ false: colors.border, true: '#9A9AA0' }}
-            />
           </View>
         </View>
 
-        {/* About App Section */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>System Info</Text>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoKey}>App Version</Text>
-            <Text style={styles.infoVal}>WorkVoice v1.0.0 (Expo SDK 58)</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoKey}>Storage Backend</Text>
-            <Text style={styles.infoVal}>AsyncStorage + Zustand Persist</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoKey}>AI Speech Engine</Text>
-            <Text style={styles.infoVal}>WorkVoice Industrial STT v4</Text>
+        {/* Section: Device & System Info */}
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Device & Storage</Text>
+          <View style={styles.settingsGroup}>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoKey}>Platform Version</Text>
+              <Text style={styles.infoValue}>WorkVoice v1.1.0</Text>
+            </View>
+            <View style={styles.settingDivider} />
+            <View style={styles.infoRow}>
+              <Text style={styles.infoKey}>Persistence Engine</Text>
+              <Text style={styles.infoValue}>AsyncStorage / Zustand</Text>
+            </View>
+            <View style={styles.settingDivider} />
+            <View style={styles.infoRow}>
+              <Text style={styles.infoKey}>Audio Recognition</Text>
+              <Text style={styles.infoValue}>WorkVoice Industrial STT v4</Text>
+            </View>
           </View>
         </View>
 
         {/* Sign Out Button */}
-        <View style={styles.signOutWrapper}>
+        <View style={styles.signOutContainer}>
           <SecondaryButton
             label="Sign Out"
-            icon={<LogOut size={16} color={colors.textPrimary} />}
+            icon={<LogOut size={16} color={colors.text} />}
             onPress={handleSignOut}
           />
         </View>
@@ -177,26 +218,41 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.screenPadding,
     paddingTop: 16,
     paddingBottom: 40,
   },
   userCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    padding: 16,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    padding: spacing.cardPadding,
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.border,
     gap: 14,
-    marginBottom: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
+    marginBottom: spacing.sectionGap,
   },
-  userInfo: {
+  userInfoCol: {
     flex: 1,
+    minWidth: 0,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
   },
   userName: {
-    ...typography.title,
-    fontSize: 18,
-    color: colors.textPrimary,
+    ...typography.cardTitle,
+    fontSize: 17,
+    flex: 1,
+    flexShrink: 1,
   },
   userTitle: {
     ...typography.body,
@@ -205,83 +261,120 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   userLine: {
-    ...typography.meta,
+    ...typography.caption,
     color: colors.textTertiary,
     marginTop: 2,
   },
-  roleSwitchCard: {
+  roleCard: {
     backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPadding,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: 16,
-    borderRadius: 16,
-    marginBottom: 16,
+    marginBottom: spacing.sectionGap,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
   },
-  roleSwitchLeft: {
+  roleHeaderRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
   },
-  roleSwitchTitle: {
-    ...typography.bodyStrong,
-    color: colors.textPrimary,
+  roleIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.primaryMuted,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
-  roleSwitchDesc: {
-    ...typography.meta,
-    color: colors.textSecondary,
-    marginTop: 2,
+  roleCardTitle: {
+    ...typography.cardTitle,
+    fontSize: 15,
   },
-  sectionCard: {
-    backgroundColor: colors.surface,
+  roleCardSubtitle: {
+    ...typography.caption,
+    marginTop: 4,
+  },
+  switchRoleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radii.button,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginTop: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
+    minHeight: 44,
   },
-  sectionTitle: {
-    ...typography.sectionHdr,
-    color: colors.textPrimary,
-    marginBottom: 12,
+  switchRoleBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.primary,
   },
-  settingRow: {
+  section: {
+    marginBottom: spacing.sectionGap,
+  },
+  sectionHeader: {
+    ...typography.sectionTitle,
+    marginBottom: 10,
+  },
+  settingsGroup: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.cardPadding,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.surfaceMuted,
+    paddingVertical: 14,
+    gap: 12,
   },
   settingTextCol: {
     flex: 1,
-    paddingRight: 10,
+    minWidth: 0,
   },
-  settingLabel: {
-    ...typography.bodyStrong,
+  settingTitle: {
+    ...typography.cardTitle,
     fontSize: 14,
   },
-  settingMeta: {
-    ...typography.meta,
-    fontSize: 11,
-    color: colors.textSecondary,
+  settingDescription: {
+    ...typography.caption,
     marginTop: 2,
+  },
+  settingDivider: {
+    height: 1,
+    backgroundColor: colors.divider,
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    alignItems: 'center',
+    paddingVertical: 14,
   },
   infoKey: {
     ...typography.body,
-    fontSize: 13,
     color: colors.textSecondary,
   },
-  infoVal: {
+  infoValue: {
     ...typography.bodyStrong,
-    fontSize: 13,
-    color: colors.textPrimary,
+    color: colors.text,
   },
-  signOutWrapper: {
+  signOutContainer: {
     marginTop: 8,
     marginBottom: 20,
   },
